@@ -14,7 +14,324 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      addresses: {
+        Row: {
+          city: string
+          complement: string | null
+          created_at: string | null
+          id: string
+          is_default: boolean | null
+          label: string | null
+          neighborhood: string
+          number: string
+          recipient_name: string
+          state: string
+          street: string
+          user_id: string
+          zip_code: string
+        }
+        Insert: {
+          city: string
+          complement?: string | null
+          created_at?: string | null
+          id?: string
+          is_default?: boolean | null
+          label?: string | null
+          neighborhood: string
+          number: string
+          recipient_name: string
+          state: string
+          street: string
+          user_id: string
+          zip_code: string
+        }
+        Update: {
+          city?: string
+          complement?: string | null
+          created_at?: string | null
+          id?: string
+          is_default?: boolean | null
+          label?: string | null
+          neighborhood?: string
+          number?: string
+          recipient_name?: string
+          state?: string
+          street?: string
+          user_id?: string
+          zip_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "addresses_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      coupon_usage: {
+        Row: {
+          coupon_code: string
+          id: string
+          shopify_order_id: string | null
+          used_at: string | null
+          user_id: string
+        }
+        Insert: {
+          coupon_code: string
+          id?: string
+          shopify_order_id?: string | null
+          used_at?: string | null
+          user_id: string
+        }
+        Update: {
+          coupon_code?: string
+          id?: string
+          shopify_order_id?: string | null
+          used_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coupon_usage_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      newsletter_subscribers: {
+        Row: {
+          email: string
+          id: string
+          is_active: boolean | null
+          name: string | null
+          source: string | null
+          subscribed_at: string | null
+          tags: string[] | null
+          user_id: string | null
+        }
+        Insert: {
+          email: string
+          id?: string
+          is_active?: boolean | null
+          name?: string | null
+          source?: string | null
+          subscribed_at?: string | null
+          tags?: string[] | null
+          user_id?: string | null
+        }
+        Update: {
+          email?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string | null
+          source?: string | null
+          subscribed_at?: string | null
+          tags?: string[] | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "newsletter_subscribers_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      orders_cache: {
+        Row: {
+          created_at: string | null
+          currency: string | null
+          financial_status: string | null
+          fulfillment_status: string | null
+          id: string
+          line_items: Json | null
+          shipping_address: Json | null
+          shopify_order_id: string
+          shopify_order_number: string | null
+          total_price: number | null
+          tracking_number: string | null
+          tracking_url: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          currency?: string | null
+          financial_status?: string | null
+          fulfillment_status?: string | null
+          id?: string
+          line_items?: Json | null
+          shipping_address?: Json | null
+          shopify_order_id: string
+          shopify_order_number?: string | null
+          total_price?: number | null
+          tracking_number?: string | null
+          tracking_url?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          currency?: string | null
+          financial_status?: string | null
+          fulfillment_status?: string | null
+          id?: string
+          line_items?: Json | null
+          shipping_address?: Json | null
+          shopify_order_id?: string
+          shopify_order_number?: string | null
+          total_price?: number | null
+          tracking_number?: string | null
+          tracking_url?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_cache_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          accepts_marketing: boolean | null
+          avatar_url: string | null
+          birth_date: string | null
+          cpf: string | null
+          created_at: string | null
+          full_name: string | null
+          gender: string | null
+          id: string
+          phone: string | null
+          shopify_customer_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          accepts_marketing?: boolean | null
+          avatar_url?: string | null
+          birth_date?: string | null
+          cpf?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          gender?: string | null
+          id: string
+          phone?: string | null
+          shopify_customer_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          accepts_marketing?: boolean | null
+          avatar_url?: string | null
+          birth_date?: string | null
+          cpf?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          gender?: string | null
+          id?: string
+          phone?: string | null
+          shopify_customer_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      reviews: {
+        Row: {
+          body: string | null
+          created_at: string | null
+          helpful_count: number | null
+          id: string
+          rating: number
+          shopify_product_id: string
+          status: string | null
+          title: string | null
+          user_id: string | null
+          verified_purchase: boolean | null
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string | null
+          helpful_count?: number | null
+          id?: string
+          rating: number
+          shopify_product_id: string
+          status?: string | null
+          title?: string | null
+          user_id?: string | null
+          verified_purchase?: boolean | null
+        }
+        Update: {
+          body?: string | null
+          created_at?: string | null
+          helpful_count?: number | null
+          id?: string
+          rating?: number
+          shopify_product_id?: string
+          status?: string | null
+          title?: string | null
+          user_id?: string | null
+          verified_purchase?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wishlists: {
+        Row: {
+          added_at: string | null
+          id: string
+          product_image: string | null
+          product_price: number | null
+          product_title: string | null
+          shopify_product_id: string
+          shopify_variant_id: string | null
+          user_id: string
+        }
+        Insert: {
+          added_at?: string | null
+          id?: string
+          product_image?: string | null
+          product_price?: number | null
+          product_title?: string | null
+          shopify_product_id: string
+          shopify_variant_id?: string | null
+          user_id: string
+        }
+        Update: {
+          added_at?: string | null
+          id?: string
+          product_image?: string | null
+          product_price?: number | null
+          product_title?: string | null
+          shopify_product_id?: string
+          shopify_variant_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wishlists_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
