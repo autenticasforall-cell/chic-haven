@@ -1,116 +1,141 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Heart, ShoppingBag, User, Menu, X, ChevronDown } from 'lucide-react';
+import { Search, ShoppingBag, User, Menu, X } from 'lucide-react';
 import { useCartStore } from '@/stores/cartStore';
-import { useWishlist } from '@/contexts/WishlistContext';
 import { useAuth } from '@/contexts/AuthContext';
+
+const navLinks = [
+  { label: 'Novidades', href: '/colecoes/novidades' },
+  { label: 'Conjuntos', href: '/colecoes/conjuntos' },
+  { label: 'Vestidos', href: '/colecoes/vestidos' },
+  { label: 'Blusas', href: '/colecoes/blusas' },
+  { label: 'Ofertas', href: '/colecoes/ofertas' },
+];
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [collectionsOpen, setCollectionsOpen] = useState(false);
   const { openCart, totalQuantity } = useCartStore();
-  const { count: wishlistCount } = useWishlist();
   const { user } = useAuth();
   const cartCount = totalQuantity();
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 100);
+    const handleScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
+
   return (
     <header
-      className={`sticky top-0 z-50 bg-background transition-shadow duration-400 ${
-        scrolled ? 'shadow-[0_2px_20px_rgba(0,0,0,0.06)]' : ''
+      className={`sticky top-0 z-50 transition-all duration-300 border-b border-secondary ${
+        scrolled
+          ? 'bg-background/80 backdrop-blur-xl shadow-soft'
+          : 'bg-background'
       }`}
-      style={{ height: '62px', borderBottom: '1px solid hsl(var(--border))' }}
     >
-      <div className="editorial-container h-full flex items-center justify-between">
-        {/* Mobile menu */}
-        <button className="lg:hidden" onClick={() => setMobileOpen(!mobileOpen)}>
+      <div className="editorial-container h-16 flex items-center justify-between">
+        {/* Mobile menu toggle */}
+        <button
+          className="lg:hidden p-2 -ml-2 text-foreground hover:text-primary transition-colors"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label="Menu"
+        >
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
 
-        {/* Nav links - desktop */}
-        <nav className="hidden lg:flex items-center gap-8 text-[13px] uppercase tracking-[1px] font-body">
-          <Link to="/colecoes/novidades" className="hover:text-accent transition-colors duration-300">
-            Novidades
-          </Link>
-          <div
-            className="relative"
-            onMouseEnter={() => setCollectionsOpen(true)}
-            onMouseLeave={() => setCollectionsOpen(false)}
-          >
-            <button className="flex items-center gap-1 hover:text-accent transition-colors duration-300">
-              Coleções <ChevronDown className="w-3 h-3" />
-            </button>
-            {collectionsOpen && (
-              <div className="absolute top-full left-0 bg-background border border-border shadow-lg py-4 px-6 min-w-[200px] animate-fade-in-up">
-                <Link to="/colecoes/vestidos" className="block py-2 text-[12px] hover:text-accent transition-colors">Vestidos</Link>
-                <Link to="/colecoes/blusas" className="block py-2 text-[12px] hover:text-accent transition-colors">Blusas</Link>
-                <Link to="/colecoes/saias" className="block py-2 text-[12px] hover:text-accent transition-colors">Saias</Link>
-                <Link to="/colecoes/calcas" className="block py-2 text-[12px] hover:text-accent transition-colors">Calças</Link>
-                <Link to="/colecoes/acessorios" className="block py-2 text-[12px] hover:text-accent transition-colors">Acessórios</Link>
-                <div className="border-t border-border mt-2 pt-2">
-                  <Link to="/colecoes" className="block py-2 text-[12px] font-medium hover:text-accent transition-colors">
-                    Ver todas →
-                  </Link>
-                </div>
-              </div>
-            )}
-          </div>
-          <Link to="/colecoes/sale" className="hover:text-accent transition-colors duration-300">
-            Sale
-          </Link>
-          <Link to="/sobre" className="hover:text-accent transition-colors duration-300">
-            Sobre
-          </Link>
-        </nav>
-
         {/* Logo */}
-        <Link to="/" className="absolute left-1/2 -translate-x-1/2 font-display text-xl md:text-2xl uppercase tracking-[3px] font-light">
-          <span>AUTÊNTICAS</span> <span className="italic">para todas</span>
+        <Link to="/" className="flex items-baseline gap-1.5 lg:absolute lg:left-1/2 lg:-translate-x-1/2">
+          <span className="font-display text-xl md:text-2xl font-bold text-primary tracking-wide">
+            Autênticas
+          </span>
+          <span className="font-body text-xs md:text-sm text-muted-foreground font-normal">
+            para todas
+          </span>
         </Link>
 
+        {/* Desktop nav */}
+        <nav className="hidden lg:flex items-center gap-8">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              to={link.href}
+              className="relative text-[13px] font-body font-medium text-foreground/80 hover:text-primary transition-colors duration-300 after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-[2px] after:bottom-[-4px] after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+
         {/* Right icons */}
-        <div className="flex items-center gap-4">
-          <Link to="/busca" className="hover:text-accent transition-colors duration-300">
+        <div className="flex items-center gap-3">
+          <Link
+            to="/busca"
+            className="p-2 text-foreground/70 hover:text-primary transition-colors duration-300"
+            aria-label="Buscar"
+          >
             <Search className="w-[18px] h-[18px]" />
           </Link>
-          <Link to={user ? "/conta/wishlist" : "/auth/login"} className="relative hover:text-accent transition-colors duration-300">
-            <Heart className="w-[18px] h-[18px]" />
-            {wishlistCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 bg-accent text-accent-foreground text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-medium">
-                {wishlistCount}
-              </span>
-            )}
+          <Link
+            to={user ? '/conta' : '/auth/login'}
+            className="p-2 text-foreground/70 hover:text-primary transition-colors duration-300"
+            aria-label="Minha conta"
+          >
+            <User className="w-[18px] h-[18px]" />
           </Link>
-          <button onClick={openCart} className="relative hover:text-accent transition-colors duration-300">
+          <button
+            onClick={openCart}
+            className="relative p-2 text-foreground/70 hover:text-primary transition-colors duration-300"
+            aria-label="Carrinho"
+          >
             <ShoppingBag className="w-[18px] h-[18px]" />
             {cartCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 bg-accent text-accent-foreground text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-medium">
+              <span className="absolute top-0.5 right-0.5 bg-primary text-primary-foreground text-[9px] w-4 h-4 rounded-full flex items-center justify-center font-semibold">
                 {cartCount}
               </span>
             )}
           </button>
-          <Link to={user ? "/conta" : "/auth/login"} className="hover:text-accent transition-colors duration-300">
-            <User className="w-[18px] h-[18px]" />
-          </Link>
         </div>
       </div>
 
-      {/* Mobile nav */}
+      {/* Mobile drawer */}
       {mobileOpen && (
-        <div className="lg:hidden absolute top-[62px] left-0 right-0 bg-background border-b border-border py-6 px-6 animate-fade-in-up z-50">
-          <nav className="flex flex-col gap-4 text-[13px] uppercase tracking-[1px] font-body">
-            <Link to="/colecoes/novidades" onClick={() => setMobileOpen(false)}>Novidades</Link>
-            <Link to="/colecoes" onClick={() => setMobileOpen(false)}>Coleções</Link>
-            <Link to="/colecoes/sale" onClick={() => setMobileOpen(false)}>Sale</Link>
-            <Link to="/sobre" onClick={() => setMobileOpen(false)}>Sobre</Link>
-          </nav>
-        </div>
+        <>
+          <div
+            className="fixed inset-0 bg-foreground/20 backdrop-blur-sm z-40 lg:hidden animate-fade-in"
+            onClick={() => setMobileOpen(false)}
+          />
+          <div className="fixed top-0 left-0 bottom-0 w-[280px] bg-background z-50 lg:hidden shadow-medium animate-slide-in-left">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-8">
+                <Link to="/" className="flex items-baseline gap-1.5" onClick={() => setMobileOpen(false)}>
+                  <span className="font-display text-xl font-bold text-primary">Autênticas</span>
+                  <span className="font-body text-xs text-muted-foreground">para todas</span>
+                </Link>
+                <button onClick={() => setMobileOpen(false)} className="p-1 text-foreground/60">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+              <nav className="flex flex-col gap-1">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="py-3 px-2 text-[15px] font-body font-medium text-foreground/80 hover:text-primary hover:bg-secondary/50 rounded-sm transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+          </div>
+        </>
       )}
     </header>
   );
