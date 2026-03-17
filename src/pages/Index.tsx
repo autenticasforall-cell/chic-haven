@@ -1,6 +1,6 @@
 import AnnouncementBar from '@/components/AnnouncementBar';
 import Header from '@/components/Header';
-import HeroCarousel from '@/components/home/HeroCarousel';
+import HeroSection from '@/components/home/HeroSection';
 import TrustStrip from '@/components/home/TrustStrip';
 import CategoryGrid from '@/components/home/CategoryGrid';
 import ProductsSection from '@/components/home/ProductsSection';
@@ -19,7 +19,7 @@ const Index = () => {
       <AnnouncementBar />
       <Header />
       <main>
-        <HeroCarousel />
+        <HeroSection />
         <TrustStrip />
         <CategoryGrid />
         <ProductsSection />
